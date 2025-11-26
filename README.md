@@ -92,28 +92,35 @@ project/
 │   ├── DETRAC-Train-Annotations/
 │   └── DETRAC-Test-Annotations/
 │
+├── document/
+│   ├── AAI-521-Final-Team-Project-Instructions.docx
+│   ├── AAI-521-Final-Team-Project-Proposal.docx
+│   └── AAI-521-Final-Team-Project-Final-Report.pdf
+│
+├── env/
+│
+├── models/
+│   └── vehicle_classifier.pth
+|
 ├── notebooks/
 │   ├── 01_dataset_exploration.ipynb
 │   ├── 02_preprocessing_and_cropping.ipynb
 │   ├── 03_vehicle_classification_model.ipynb
-│   ├── 04_vehicle_counting_and_analysis.ipynb   (optional)
-│   └── 05_image_restoration_optional.ipynb      (bonus)
+│   ├── 04_vehicle_counting_and_analysis.ipynb
+│   └── 05_image_restoration_optional.ipynb
 │
-├── models/
-│   └── vehicle_classifier.pth
+├── outputs/
+│   ├── plots/
+│   ├── videos/
+|   ├── cropped_vehicle_dataset.npz
+│   ├── annotated_frames/
+│   └── annotated_videos/
 │
 ├── src/
 │   └── utils_detrac.py
 │
-├── outputs/
-│   ├── plots/
-│   ├── annotated_frames/
-│   └── annotated_videos/
-│
-├── document/
-│   ├── project_proposal.pdf
-│   └── final_report.pdf
-│
+├── .env
+├── .gitignore
 ├── README.md
 └── requirements.txt
 ```
