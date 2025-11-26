@@ -1,5 +1,22 @@
 
-.env
 .vscode/
 *.mp4
 *.pth
+*.npz
+*.xml
+*.jpg
+
+.env
+env/
+.env/
+venv/
+
+__pycache__/
+
+data/
+.data/
+
+.DS_Store
+
+outputs/
+.outputs/

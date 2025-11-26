@@ -42,9 +42,126 @@ By Day 7 (end of the module week):
 - Module 7, you will complete a Peer Review for each team member and submit in an individual assignment in Canvas.   
 
 
+---
 
 ## References
 
-
+---
 
 ## Technical Details
+
+### Setup Instructions
+
+1. **Clone or download the project repository**  
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
+
+2. **Create a virtual environment**  
+   Create a virtual environment to manage dependencies:
+   ```bash
+   python3.12 -m venv env
+   ```
+
+   Activate the environment on macOS/Linux:
+   ```bash
+   source env/bin/activate
+   ```
+
+3. **Install the dependencies**  
+   Use the `requirements.txt` file to install the required packages:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **To deactivate the virtual environment, run:**
+
+   ```bash
+   deactivate
+   ```
+
+---
+### Final Project Structure
+
+```
+project/
+│
+├── data/
+│   ├── DETRAC-Images/
+│   ├── DETRAC-Train-Annotations/
+│   └── DETRAC-Test-Annotations/
+│
+├── notebooks/
+│   ├── 01_dataset_exploration.ipynb
+│   ├── 02_preprocessing_and_cropping.ipynb
+│   ├── 03_vehicle_classification_model.ipynb
+│   ├── 04_vehicle_counting_and_analysis.ipynb   (optional)
+│   └── 05_image_restoration_optional.ipynb      (bonus)
+│
+├── models/
+│   └── vehicle_classifier.pth
+│
+├── src/
+│   └── utils_detrac.py
+│
+├── outputs/
+│   ├── plots/
+│   ├── annotated_frames/
+│   └── annotated_videos/
+│
+├── document/
+│   ├── project_proposal.pdf
+│   └── final_report.pdf
+│
+├── README.md
+└── requirements.txt
+```
+
+### Project Notebook Structure
+
+#### Notebook 1 — `01_dataset_exploration.ipynb`
+**Input:** Raw DETRAC images + XML
+**Output:**
+- EDA stats
+- Plots
+- Sample frames
+- Insight summary for report
+
+#### Notebook 2 — `02_preprocessing_and_cropping.ipynb`
+**Input:** Raw data
+**Output:**
+- Cropped vehicle dataset (numpy or torch tensors)
+- Saved file: `cropped_dataset.npz` or `.pt`
+- Dataset statistics
+
+#### Notebook 3 — `03_vehicle_classification_model.ipynb`
+**Input:** Cropped dataset
+**Output:**
+- Model training
+- Saved model: `vehicle_classifier.pth`
+
+**Metrics:**
+- Accuracy
+- Loss curves
+- Confusion matrix
+- Classification report
+
+**Visualizations:**
+- Sample predictions
+- Annotated frames
+- Annotated video (optional)
+
+#### Notebook 4 — `04_vehicle_counting_and_analysis.ipynb`
+**Performs:**
+- Per-frame vehicle counting
+- LMV vs HMV time plot
+- Useful visualizations for traffic analysis
+
+#### Notebook 5 — `05_image_restoration_optional.ipynb` *(Optional - Bonus for Extra Credit)*
+**Use HuggingFace pretrained models to show:**
+- Super-resolution
+- Denoising
+- Colorization
+
+---
