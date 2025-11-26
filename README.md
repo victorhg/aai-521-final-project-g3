@@ -46,6 +46,10 @@ By Day 7 (end of the module week):
 
 ## References
 
+download dataset:
+- https://sites.google.com/view/daweidu/projects/ua-detrac?authuser=0
+- https://www.kaggle.com/datasets/dtrnngc/ua-detrac-dataset?resource=download
+
 ---
 
 ## Technical Details
@@ -170,5 +174,3 @@ project/
 - Super-resolution
 - Denoising
 - Colorization
-
----
