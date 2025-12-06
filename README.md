@@ -94,7 +94,10 @@ project/
 ├── data/
 │   ├── DETRAC-Images/
 │   ├── DETRAC-Train-Annotations/
-│   └── DETRAC-Test-Annotations/
+│   ├── DETRAC-Test-Annotations/
+│   ├── cropped_vehicle_dataset.npz
+│   └── real_life/
+│       └── traffic_example.mov
 │
 ├── document/
 │   ├── AAI-521-Final-Team-Project-Instructions.docx
@@ -111,12 +114,15 @@ project/
 │   ├── 02_preprocessing_and_cropping.ipynb
 │   ├── 03_vehicle_classification_model.ipynb
 │   ├── 04_vehicle_counting_and_analysis.ipynb
-│   └── 05_image_restoration_optional.ipynb
+│   ├── 05_image_restoration_optional.ipynb
+│   └── 06_real_life_traffic_video_demo.ipynb
 │
 ├── outputs/
 │   ├── plots/
 │   ├── videos/
-|   ├── cropped_vehicle_dataset.npz
+│   │   ├── traffic_example_analysis.mp4
+│   │   ├── traffic_example_detections.mp4
+│   │   └── traffic_example_mask.mp4
 │   ├── annotated_frames/
 │   └── annotated_videos/
 │
