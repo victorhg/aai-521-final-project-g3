@@ -137,16 +137,16 @@ def generate_cnn_training_dataset():
             for each annotated vehicle:
                 # 1. Extract bounding box
                 crop = frame[y1:y2, x1:x2]
-                
+
                 # 2. Handle edge cases
                 crop = clamp_to_image_bounds(crop)
-                
+
                 # 3. Resize to fixed dimensions
                 crop = cv2.resize(crop, (64, 64))
-                
+
                 # 4. Normalize to [0,1]
                 crop = crop.astype('float32') / 255.0
-                
+
                 # 5. Store with label
                 dataset.append((crop, class_idx))
 ```
@@ -202,26 +202,26 @@ VehicleClassifier(
     BatchNorm2d(32)
     ReLU()
     MaxPool2d(2×2)  # 64×64 → 32×32
-    
+
     # Block 2: Mid-level features
     Conv2d(32 → 64, kernel=3×3, padding=1)
     BatchNorm2d(64)
     ReLU()
     MaxPool2d(2×2)  # 32×32 → 16×16
-    
+
     # Block 3: High-level features
     Conv2d(64 → 128, kernel=3×3, padding=1)
     BatchNorm2d(128)
     ReLU()
     MaxPool2d(2×2)  # 16×16 → 8×8
-    
+
     # Block 4: Abstract features
     Conv2d(128 → 256, kernel=3×3, padding=1)
     BatchNorm2d(256)
     ReLU()
     MaxPool2d(2×2)  # 8×8 → 4×4
   )
-  
+
   classifier: Sequential(
     Flatten()  # 256×4×4 = 4,096 features
     Linear(4096 → 256)
@@ -294,7 +294,7 @@ for epoch in range(1, NUM_EPOCHS + 1):
         loss = criterion(logits, yb)
         loss.backward()
         optimizer.step()
-    
+
     # Validation phase
     model.eval()
     with torch.no_grad():
@@ -302,7 +302,7 @@ for epoch in range(1, NUM_EPOCHS + 1):
             logits = model(xb)
             loss = criterion(logits, yb)
             # Track metrics
-    
+
     # Model checkpointing
     if val_acc > best_val_acc:
         best_val_acc = val_acc
@@ -323,17 +323,17 @@ def predict_vehicle_class(crop_rgb_np, model, idx_to_class, device):
     # Preprocessing
     crop = ensure_float32(crop_rgb_np)
     crop = normalize_to_01(crop)
-    
+
     # Tensor conversion
     tensor = torch.from_numpy(crop).permute(2,0,1).unsqueeze(0).to(device)
-    
+
     # Inference
     model.eval()
     with torch.no_grad():
         logits = model(tensor)
         probs = F.softmax(logits, dim=1)
         confidence, pred_idx = probs.max(dim=1)
-    
+
     return idx_to_class[pred_idx], confidence.item()
 ```
 
@@ -344,18 +344,18 @@ def annotate_frame(seq_id, frame_num, model):
     # Load frame and annotations
     frame = load_image(seq_id, frame_num)
     annotations = load_xml_annotations(seq_id)
-    
+
     # Process each vehicle
     for vehicle in annotations[frame_num]:
         x, y, w, h = vehicle['bbox']
         crop = frame[y:y+h, x:x+w]
-        
+
         # Predict class
         label, confidence = predict_vehicle_class(crop, model)
-        
+
         # Overlay on frame
         draw_bbox(frame, (x,y,w,h), label, confidence)
-    
+
     return annotated_frame
 ```
 
@@ -514,21 +514,21 @@ def compute_counts_for_sequence(seq_id, model, fps=25.0):
         # Load frame and annotations
         frame = load_frame(seq_id, frame_num)
         targets = get_annotations(seq_id, frame_num)
-        
+
         # Count by category
         lmv_count = 0
         hmv_count = 0
-        
+
         for vehicle_bbox in targets:
             crop = extract_crop(frame, vehicle_bbox)
             pred_label, conf = predict_vehicle_class(crop, model)
             category = map_to_lmv_hmv(pred_label)
-            
+
             if category == "LMV":
                 lmv_count += 1
             elif category == "HMV":
                 hmv_count += 1
-        
+
         records.append({
             'frame': frame_num,
             'time_sec': frame_num / fps,
@@ -536,7 +536,7 @@ def compute_counts_for_sequence(seq_id, model, fps=25.0):
             'LMV_count': lmv_count,
             'HMV_count': hmv_count
         })
-    
+
     return pd.DataFrame(records)
 ```
 
@@ -635,7 +635,7 @@ Super-resolution and denoising in this project are implemented with a diffusion-
 
 The diffusion upscaler combines a learned generative prior with conditioning on the input image to both synthesize plausible high-frequency detail and suppress noise and interpolation artifacts from bicubic upsampling. This can produce sharper frames and measurable improvements in PSNR/SSIM versus naive upsampling, at the cost of significant compute (GPU inference time) and occasional “hallucinated” details where the model invents plausible but not necessarily ground-truth textures.
 
-Colorization is handled with a GAN-based model that operates in LAB color space: the pipeline extracts the L (lightness) channel from a grayscale image, normalizes it, and uses a ResNet-34 encoder plus a U‑Net decoder to predict the ab chrominance channels. The predicted ab channels are denormalized and combined with the original L channel to reconstruct an RGB image. GAN training generate colors and temporal stability across frames, but the method can hallucinate color—producing perceptually plausible rather than guaranteed-accurate hues. Overall, the GAN colorizer is fast and effective for restoring or modernizing grayscale footage, while the diffusion upscaler provides higher-fidelity restoration for low-res or noisy inputs; together they offer complementary restoration tools that improve downstream detection and classification.
+Colorization is handled with a GAN-based model that operates in LAB color space: the pipeline extracts the L (lightness) channel from a grayscale image, normalizes it, and uses a ResNet-34 encoder plus a U-Net decoder to predict the ab chrominance channels. The predicted ab channels are denormalized and combined with the original L channel to reconstruct an RGB image. GAN training generate colors and temporal stability across frames, but the method can hallucinate color—producing perceptually plausible rather than guaranteed-accurate hues. Overall, the GAN colorizer is fast and effective for restoring or modernizing grayscale footage, while the diffusion upscaler provides higher-fidelity restoration for low-res or noisy inputs; together they offer complementary restoration tools that improve downstream detection and classification.
 
 **6.1.1 Technology Stack**
 
@@ -743,20 +743,20 @@ denoised = pipe_sr(prompt=prompt, image=noisy_low_res).images[0]
 def colorize_image(gray_rgb, generator_model, size=256):
     # Convert to LAB color space
     gray_lab = rgb2lab(gray_rgb).astype('float32')
-    
+
     # Extract and normalize L channel
     L = gray_lab[:, :, 0] / 50.0 - 1.0  # Normalize to [-1, 1]
     L_tensor = torch.from_numpy(L).unsqueeze(0).unsqueeze(0)
-    
+
     # Predict ab channels
     with torch.no_grad():
         ab_pred = generator_model(L_tensor)
-    
+
     # Denormalize and combine
     ab_denorm = ab_pred * 110.0
     L_denorm = (L + 1.0) * 50.0
     Lab_combined = torch.cat([L_denorm, ab_denorm], dim=1)
-    
+
     # Convert back to RGB
     colorized_rgb = lab2rgb(Lab_combined.numpy())
     return (colorized_rgb * 255).astype('uint8')
@@ -874,6 +874,6 @@ The modular architecture enables iterative improvement and deployment flexibilit
 
 ---
 
-**Document Version**: 1.0  
-**Last Updated**: December 3, 2025  
+**Document Version**: 2.0  
+**Last Updated**: December 7, 2025  
 **Contact**: AAI-521 Group 3 - University of San Diego
